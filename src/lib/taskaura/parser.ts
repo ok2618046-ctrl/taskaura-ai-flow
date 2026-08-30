@@ -111,13 +111,13 @@ function detectCategory(text: string): Category {
 function parseTimeOfDay(text: string): { hours: number; minutes: number; matched: string } | null {
   const m = text.match(/\b(\d{1,2})(?::(\d{2}))?\s*(am|pm)\b/);
   if (m) {
-    let hours = parseInt(m[1], 10) % 12;
+    let hours = parseInt(m[1]!, 10) % 12;
     if (m[3] === "pm") hours += 12;
     return { hours, minutes: m[2] ? parseInt(m[2], 10) : 0, matched: m[0] };
   }
   const m24 = text.match(/\bat\s+(\d{1,2}):(\d{2})\b/);
   if (m24) {
-    return { hours: parseInt(m24[1], 10), minutes: parseInt(m24[2], 10), matched: m24[0] };
+    return { hours: parseInt(m24[1]!, 10), minutes: parseInt(m24[2]!, 10), matched: m24[0] };
   }
   return null;
 }
@@ -148,12 +148,12 @@ function parseDay(text: string, now: Date): { date: Date; matched: string } | nu
   const inDays = text.match(/\bin\s+(\d{1,2})\s+days?\b/);
   if (inDays) {
     const d = new Date(base);
-    d.setDate(d.getDate() + parseInt(inDays[1], 10));
+    d.setDate(d.getDate() + parseInt(inDays[1]!, 10));
     return { date: d, matched: inDays[0] };
   }
 
   for (let i = 0; i < WEEKDAYS.length; i++) {
-    const name = WEEKDAYS[i];
+    const name = WEEKDAYS[i]!;
     const re = new RegExp(`\\b(next\\s+)?(on\\s+)?${name}\\b`);
     const m = text.match(re);
     if (m) {

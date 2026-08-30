@@ -51,7 +51,7 @@ export function SmartInput({ autoFocus = false }: { autoFocus?: boolean }) {
   function simulateVoice() {
     if (listening) return;
     setListening(true);
-    const sample = VOICE_SAMPLES[Math.floor(Math.random() * VOICE_SAMPLES.length)];
+    const sample = VOICE_SAMPLES[Math.floor(Math.random() * VOICE_SAMPLES.length)] ?? VOICE_SAMPLES[0]!;
     let i = 0;
     setValue("");
     const timer = window.setInterval(() => {
@@ -131,7 +131,7 @@ function Chip({
   children,
 }: {
   icon: React.ComponentType<{ className?: string }>;
-  className?: string;
+  className?: string | undefined;
   children: React.ReactNode;
 }) {
   return (
