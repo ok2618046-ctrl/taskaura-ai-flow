@@ -118,9 +118,9 @@ interface TaskAuraContextValue {
 const TaskAuraContext = createContext<TaskAuraContextValue | null>(null);
 
 export function TaskAuraProvider({ children }: { children: ReactNode }) {
-  // Start empty so server and client render identically, then seed after mount.
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const [solutions, setSolutions] = useState<Solution[]>([]);
+  // Seed data is deterministic, so server and client render identically.
+  const [tasks, setTasks] = useState<Task[]>(seedTasks);
+  const [solutions, setSolutions] = useState<Solution[]>(seedSolutions);
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
@@ -128,15 +128,11 @@ export function TaskAuraProvider({ children }: { children: ReactNode }) {
       const raw = window.localStorage.getItem(STORAGE_KEY);
       if (raw) {
         const parsed = JSON.parse(raw) as { tasks: Task[]; solutions: Solution[] };
-        setTasks(Array.isArray(parsed.tasks) ? parsed.tasks : seedTasks());
-        setSolutions(Array.isArray(parsed.solutions) ? parsed.solutions : seedSolutions());
-      } else {
-        setTasks(seedTasks());
-        setSolutions(seedSolutions());
+        if (Array.isArray(parsed.tasks)) setTasks(parsed.tasks);
+        if (Array.isArray(parsed.solutions)) setSolutions(parsed.solutions);
       }
     } catch {
-      setTasks(seedTasks());
-      setSolutions(seedSolutions());
+      /* ignore corrupted storage */
     }
     setHydrated(true);
   }, []);
