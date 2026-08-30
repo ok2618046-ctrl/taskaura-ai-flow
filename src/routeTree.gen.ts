@@ -10,33 +10,63 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AnalyticsRouteImport } from './routes/analytics'
+import { Route as ParserRouteImport } from './routes/parser'
+import { Route as SolverRouteImport } from './routes/solver'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AnalyticsRoute = AnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ParserRoute = ParserRouteImport.update({
+  id: '/parser',
+  path: '/parser',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SolverRoute = SolverRouteImport.update({
+  id: '/solver',
+  path: '/solver',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/analytics': typeof AnalyticsRoute
+  '/parser': typeof ParserRoute
+  '/solver': typeof SolverRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/analytics': typeof AnalyticsRoute
+  '/parser': typeof ParserRoute
+  '/solver': typeof SolverRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/analytics': typeof AnalyticsRoute
+  '/parser': typeof ParserRoute
+  '/solver': typeof SolverRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/analytics' | '/parser' | '/solver'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/analytics' | '/parser' | '/solver'
+  id: '__root__' | '/' | '/analytics' | '/parser' | '/solver'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AnalyticsRoute: typeof AnalyticsRoute
+  ParserRoute: typeof ParserRoute
+  SolverRoute: typeof SolverRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +78,35 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/analytics': {
+      id: '/analytics'
+      path: '/analytics'
+      fullPath: '/analytics'
+      preLoaderRoute: typeof AnalyticsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/parser': {
+      id: '/parser'
+      path: '/parser'
+      fullPath: '/parser'
+      preLoaderRoute: typeof ParserRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/solver': {
+      id: '/solver'
+      path: '/solver'
+      fullPath: '/solver'
+      preLoaderRoute: typeof SolverRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AnalyticsRoute: AnalyticsRoute,
+  ParserRoute: ParserRoute,
+  SolverRoute: SolverRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

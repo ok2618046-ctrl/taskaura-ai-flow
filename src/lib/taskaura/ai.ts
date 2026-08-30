@@ -90,7 +90,7 @@ const KEYWORD_BREAKDOWNS: { match: RegExp; steps: string[] }[] = [
 
 export function generateSubtasks(title: string, category: Category): SubTask[] {
   const keyword = KEYWORD_BREAKDOWNS.find((k) => k.match.test(title));
-  const pool = keyword ? keyword.steps : BREAKDOWN_TEMPLATES[category][0];
+  const pool = keyword ? keyword.steps : (BREAKDOWN_TEMPLATES[category][0] ?? []);
   const count = Math.min(pool.length, 3 + (title.length % 3));
   return pool.slice(0, count).map((step) => ({ id: uid("sub"), title: step, done: false }));
 }

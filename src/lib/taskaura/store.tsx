@@ -23,74 +23,74 @@ function hoursFromNow(hours: number) {
 function seedTasks(): Task[] {
   return [
     {
-      id: uid("task"),
+      id: "seed-task-1",
       title: "Q4 financial audit preparation",
       priority: "high",
       category: "Finance",
       due: hoursFromNow(28),
       completed: false,
-      createdAt: new Date().toISOString(),
+      createdAt: hoursFromNow(-48),
       subtasks: [
-        { id: uid("sub"), title: "Collect all invoices from Oct–Dec", done: true },
-        { id: uid("sub"), title: "Reconcile bank statements for Q4", done: false },
-        { id: uid("sub"), title: "Draft executive summary for the board", done: false },
+        { id: "seed-sub-1", title: "Collect all invoices from Oct–Dec", done: true },
+        { id: "seed-sub-2", title: "Reconcile bank statements for Q4", done: false },
+        { id: "seed-sub-3", title: "Draft executive summary for the board", done: false },
       ],
     },
     {
-      id: uid("task"),
+      id: "seed-task-2",
       title: "Redesign landing page hero section",
       priority: "medium",
       category: "Work",
       due: hoursFromNow(72),
       completed: false,
-      createdAt: new Date().toISOString(),
+      createdAt: hoursFromNow(-48),
       subtasks: [],
     },
     {
-      id: uid("task"),
+      id: "seed-task-3",
       title: "Fix the flaky office WiFi in meeting room B",
       priority: "high",
       category: "Daily Problem",
       due: hoursFromNow(6),
       completed: false,
-      createdAt: new Date().toISOString(),
+      createdAt: hoursFromNow(-48),
       subtasks: [],
     },
     {
-      id: uid("task"),
+      id: "seed-task-4",
       title: "Call Mom about the weekend plan",
       priority: "low",
       category: "Personal",
       due: hoursFromNow(9),
       completed: false,
-      createdAt: new Date().toISOString(),
+      createdAt: hoursFromNow(-48),
       subtasks: [],
     },
     {
-      id: uid("task"),
+      id: "seed-task-5",
       title: "Ship the analytics dashboard v2",
       priority: "medium",
       category: "Work",
       due: hoursFromNow(-20),
       completed: true,
-      createdAt: new Date().toISOString(),
+      createdAt: hoursFromNow(-48),
       subtasks: [],
     },
     {
-      id: uid("task"),
+      id: "seed-task-6",
       title: "Renew health insurance policy",
       priority: "low",
       category: "Finance",
       due: hoursFromNow(-4),
       completed: true,
-      createdAt: new Date().toISOString(),
+      createdAt: hoursFromNow(-48),
       subtasks: [],
     },
   ];
 }
 
 function seedSolutions(): Solution[] {
-  return [solveProblem("WiFi not working at home")];
+  return [{ ...solveProblem("WiFi not working at home"), id: "seed-solution-1", createdAt: hoursFromNow(-1) }];
 }
 
 interface TaskAuraContextValue {
@@ -118,6 +118,7 @@ interface TaskAuraContextValue {
 const TaskAuraContext = createContext<TaskAuraContextValue | null>(null);
 
 export function TaskAuraProvider({ children }: { children: ReactNode }) {
+  // Seed data is deterministic, so server and client render identically.
   const [tasks, setTasks] = useState<Task[]>(seedTasks);
   const [solutions, setSolutions] = useState<Solution[]>(seedSolutions);
   const [hydrated, setHydrated] = useState(false);
