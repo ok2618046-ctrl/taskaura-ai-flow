@@ -11,6 +11,10 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { AppHeader } from "@/components/taskaura/app-header";
+import { Toaster } from "@/components/ui/sonner";
+import { TaskAuraProvider } from "@/lib/taskaura/store";
+import { ThemeProvider } from "@/lib/theme";
 
 function NotFoundComponent() {
   return (
