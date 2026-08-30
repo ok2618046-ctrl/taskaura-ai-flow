@@ -1,24 +1,42 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
+import { ProblemSolver } from "@/components/taskaura/problem-solver";
+import { SmartInput } from "@/components/taskaura/smart-input";
+import { StatsGrid } from "@/components/taskaura/stats-grid";
+import { TaskList } from "@/components/taskaura/task-list";
+
+const title = "TaskAura — AI productivity & daily problem solver";
+const description =
+  "Turn plain sentences into scheduled tasks, break them down into AI sub-steps, and get step-by-step fixes for everyday problems.";
+
 export const Route = createFileRoute("/")({
-  component: Index,
+  head: () => ({
+    meta: [
+      { title },
+      { name: "description", content: description },
+      { property: "og:title", content: title },
+      { property: "og:description", content: description },
+    ],
+  }),
+  component: Dashboard,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
-function Index() {
+function Dashboard() {
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
+    <div className="space-y-12">
+      <h1 className="sr-only">TaskAura dashboard</h1>
+      <StatsGrid />
+      <SmartInput />
+      <div className="grid grid-cols-1 gap-10 lg:grid-cols-12">
+        <div className="lg:col-span-8">
+          <TaskList />
+        </div>
+        <div className="lg:col-span-4">
+          <div className="lg:sticky lg:top-24">
+            <ProblemSolver compact />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
