@@ -2,10 +2,8 @@ import { createServerFn } from "@tanstack/react-start";
 import { NoObjectGeneratedError, Output, streamText } from "ai";
 import { z } from "zod";
 
-const SolverInput = z.object({ query: z.string().min(1) });
-
 export const solveProblemWithAI = createServerFn({ method: "POST" })
-  .inputValidator((input: unknown) => SolverInput.parse(input))
+  .inputValidator((input: unknown) => z.object({ query: z.string().min(1) }).parse(input))
   .handler(async ({ data }) => {
     const key = process.env["LOVABLE_API_KEY"];
     if (!key) throw new Error("Missing LOVABLE_API_KEY");
