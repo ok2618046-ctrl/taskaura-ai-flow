@@ -9,6 +9,7 @@ import {
 } from "react";
 
 import { generateSubtasks, solveProblem, uid } from "./ai";
+import { solveProblemWithAI } from "./solver.functions";
 import { parseTaskInput } from "./parser";
 import type { Category, ParsedTask, Priority, Solution, Task } from "./types";
 
@@ -102,7 +103,7 @@ interface TaskAuraContextValue {
   removeTask: (id: string) => void;
   breakdown: (id: string) => void;
   toggleSubtask: (taskId: string, subId: string) => void;
-  ask: (query: string) => Solution;
+  ask: (query: string) => Promise<Solution>;
   removeSolution: (id: string) => void;
   stats: {
     total: number;
@@ -202,10 +203,28 @@ export function TaskAuraProvider({ children }: { children: ReactNode }) {
     );
   }, []);
 
-  const ask = useCallback((query: string) => {
-    const solution = solveProblem(query);
-    setSolutions((prev) => [solution, ...prev.filter((s) => s.query !== solution.query)].slice(0, 12));
-    return solution;
+  const ask = useCallback(async (query: string) => {
+    try {
+      const result = await solveProblemWithAI({ data: { query } });
+      const solution: Solution = {
+        id: uid("sol"),
+        query: query.trim(),
+        summary: result.summary,
+        steps: result.steps,
+        createdAt: new Date().toISOString(),
+      };
+      setSolutions((prev) =>
+        [solution, ...prev.filter((s) => s.query !== solution.query)].slice(0, 12),
+      );
+      return solution;
+    } catch (error) {
+      console.error("AI solver failed, using local fallback", error);
+      const solution = solveProblem(query);
+      setSolutions((prev) =>
+        [solution, ...prev.filter((s) => s.query !== solution.query)].slice(0, 12),
+      );
+      return solution;
+    }
   }, []);
 
   const removeSolution = useCallback((id: string) => {
