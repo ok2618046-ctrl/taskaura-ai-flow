@@ -9,6 +9,7 @@ import {
 } from "react";
 
 import { generateSubtasks, solveProblem, uid } from "./ai";
+import { solveProblemWithAI } from "./solver.functions";
 import { parseTaskInput } from "./parser";
 import type { Category, ParsedTask, Priority, Solution, Task } from "./types";
 
@@ -102,7 +103,7 @@ interface TaskAuraContextValue {
   removeTask: (id: string) => void;
   breakdown: (id: string) => void;
   toggleSubtask: (taskId: string, subId: string) => void;
-  ask: (query: string) => Solution;
+  ask: (query: string) => Promise<Solution>;
   removeSolution: (id: string) => void;
   stats: {
     total: number;

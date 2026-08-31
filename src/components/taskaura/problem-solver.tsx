@@ -15,16 +15,17 @@ export function ProblemSolver({ compact = false }: { compact?: boolean }) {
   const active: Solution | undefined =
     solutions.find((s) => s.id === activeId) ?? solutions[0];
 
-  function submit(text: string) {
+  async function submit(text: string) {
     const value = text.trim();
     if (!value || thinking) return;
     setThinking(true);
-    window.setTimeout(() => {
-      const solution = ask(value);
+    try {
+      const solution = await ask(value);
       setActiveId(solution.id);
       setQuery("");
+    } finally {
       setThinking(false);
-    }, 650);
+    }
   }
 
   return (
