@@ -175,22 +175,39 @@ export function TaskAuraProvider({ children }: { children: ReactNode }) {
     setTasks((prev) => prev.filter((t) => t.id !== id));
   }, []);
 
-  const breakdown = useCallback((id: string) => {
-    setTasks((prev) => prev.map((t) => (t.id === id ? { ...t, breakdownLoading: true } : t)));
-    window.setTimeout(() => {
+  const breakdown = useCallback(
+    async (id: string) => {
+      const task = tasks.find((t) => t.id === id);
+      if (!task || task.subtasks.length) return;
+      setTasks((prev) => prev.map((t) => (t.id === id ? { ...t, breakdownLoading: true } : t)));
+
+      let titles: string[];
+      try {
+        const result = await breakdownTaskWithAI({
+          data: { title: task.title, category: task.category, language: lang },
+        });
+        titles = result.subtasks;
+      } catch (error) {
+        console.error("AI breakdown failed, using local fallback", error);
+        titles = generateSubtasks(task.title, task.category).map((s) => s.title);
+      }
+
       setTasks((prev) =>
         prev.map((t) =>
           t.id === id
             ? {
                 ...t,
                 breakdownLoading: false,
-                subtasks: t.subtasks.length ? t.subtasks : generateSubtasks(t.title, t.category),
+                subtasks: t.subtasks.length
+                  ? t.subtasks
+                  : titles.map((title) => ({ id: uid("sub"), title, done: false })),
               }
             : t,
         ),
       );
-    }, 700);
-  }, []);
+    },
+    [tasks, lang],
+  );
 
   const toggleSubtask = useCallback((taskId: string, subId: string) => {
     setTasks((prev) =>
