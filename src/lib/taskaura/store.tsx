@@ -102,7 +102,7 @@ interface TaskAuraContextValue {
   addTask: (parsed: ParsedTask) => Task;
   toggleTask: (id: string) => void;
   removeTask: (id: string) => void;
-  breakdown: (id: string) => void;
+  breakdown: (id: string) => void | Promise<void>;
   toggleSubtask: (taskId: string, subId: string) => void;
   ask: (query: string) => Promise<Solution>;
   removeSolution: (id: string) => void;
@@ -224,7 +224,7 @@ export function TaskAuraProvider({ children }: { children: ReactNode }) {
 
   const ask = useCallback(async (query: string) => {
     try {
-      const result = await solveProblemWithAI({ data: { query } });
+      const result = await solveProblemWithAI({ data: { query, language: lang } });
       const solution: Solution = {
         id: uid("sol"),
         query: query.trim(),
@@ -244,7 +244,7 @@ export function TaskAuraProvider({ children }: { children: ReactNode }) {
       );
       return solution;
     }
-  }, []);
+  }, [lang]);
 
   const removeSolution = useCallback((id: string) => {
     setSolutions((prev) => prev.filter((s) => s.id !== id));
