@@ -2,18 +2,21 @@ import { Link } from "@tanstack/react-router";
 import { Moon, Plus, Sparkles, Sun } from "lucide-react";
 
 import { AddTaskDialog } from "@/components/taskaura/add-task-dialog";
+import { LanguageSelect } from "@/components/taskaura/language-select";
 import { Button } from "@/components/ui/button";
+import { useI18n, type TranslationKey } from "@/lib/i18n";
 import { useTheme } from "@/lib/theme";
 
 const NAV = [
-  { to: "/", label: "Dashboard" },
-  { to: "/parser", label: "AI Task Parser" },
-  { to: "/solver", label: "Daily Problem Solver" },
-  { to: "/analytics", label: "Analytics" },
-] as const;
+  { to: "/", key: "nav.dashboard" },
+  { to: "/parser", key: "nav.parser" },
+  { to: "/solver", key: "nav.solver" },
+  { to: "/analytics", key: "nav.analytics" },
+] as const satisfies readonly { to: string; key: TranslationKey }[];
 
 export function AppHeader() {
   const { theme, toggle } = useTheme();
+  const { t } = useI18n();
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border bg-background/80 backdrop-blur-md">
@@ -34,18 +37,19 @@ export function AppHeader() {
                 activeProps={{ className: "text-foreground" }}
                 className="transition-colors hover:text-foreground"
               >
-                {item.label}
+                {t(item.key)}
               </Link>
             ))}
           </nav>
         </div>
 
         <div className="flex shrink-0 items-center gap-2">
+          <LanguageSelect />
           <Button
             variant="ghost"
             size="icon"
             onClick={toggle}
-            aria-label={theme === "dark" ? "Switch to light theme" : "Switch to dark theme"}
+            aria-label={theme === "dark" ? t("theme.toLight") : t("theme.toDark")}
             className="min-h-11 min-w-11 rounded-full"
           >
             {theme === "dark" ? <Moon className="size-4" /> : <Sun className="size-4" />}
@@ -54,7 +58,7 @@ export function AppHeader() {
             trigger={
               <Button className="rounded-full bg-brand font-semibold text-brand-foreground shadow-lg shadow-brand/25 hover:bg-brand-light">
                 <Plus className="size-4" />
-                <span className="hidden sm:inline">Add Task</span>
+                <span className="hidden sm:inline">{t("action.addTask")}</span>
               </Button>
             }
           />
@@ -70,7 +74,7 @@ export function AppHeader() {
             activeProps={{ className: "bg-brand/10 text-brand" }}
             className="shrink-0 rounded-full px-3 py-1.5 transition-colors"
           >
-            {item.label}
+            {t(item.key)}
           </Link>
         ))}
       </nav>
