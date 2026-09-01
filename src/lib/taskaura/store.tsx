@@ -9,7 +9,8 @@ import {
 } from "react";
 
 import { generateSubtasks, solveProblem, uid } from "./ai";
-import { solveProblemWithAI } from "./solver.functions";
+import { breakdownTaskWithAI, solveProblemWithAI } from "./solver.functions";
+import { useI18n } from "@/lib/i18n";
 import { parseTaskInput } from "./parser";
 import type { Category, ParsedTask, Priority, Solution, Task } from "./types";
 
