@@ -121,6 +121,7 @@ const TaskAuraContext = createContext<TaskAuraContextValue | null>(null);
 
 export function TaskAuraProvider({ children }: { children: ReactNode }) {
   // Seed data is deterministic, so server and client render identically.
+  const { lang } = useI18n();
   const [tasks, setTasks] = useState<Task[]>(seedTasks);
   const [solutions, setSolutions] = useState<Solution[]>(seedSolutions);
   const [hydrated, setHydrated] = useState(false);
