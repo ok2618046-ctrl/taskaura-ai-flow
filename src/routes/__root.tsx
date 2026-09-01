@@ -13,6 +13,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { AppHeader } from "@/components/taskaura/app-header";
 import { Toaster } from "@/components/ui/sonner";
+import { LanguageProvider } from "@/lib/i18n";
 import { TaskAuraProvider } from "@/lib/taskaura/store";
 import { ThemeProvider } from "@/lib/theme";
 
@@ -127,6 +128,7 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
+        <LanguageProvider>
         <TaskAuraProvider>
           <div className="min-h-screen bg-background text-foreground selection:bg-brand/30">
             <AppHeader />
@@ -137,6 +139,7 @@ function RootComponent() {
           </div>
           <Toaster position="top-right" />
         </TaskAuraProvider>
+        </LanguageProvider>
       </ThemeProvider>
     </QueryClientProvider>
   );
